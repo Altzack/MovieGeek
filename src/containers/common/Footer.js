@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { FaGithub, FaLinkedin, FaTelegramPlane } from 'react-icons/fa';
-import { MobileOnly, useResponsive } from './responsiveComponents';
+import { SmallScreenOnly, useIsSmallScreen } from './responsiveComponents';
 
 const FooterSeparator = styled.span`
   padding: 0 10px;
@@ -26,19 +26,19 @@ const FooterContentContainer = styled.div`
 `;
 
 export default function Footer() {
-  const { isTabletOrMobile } = useResponsive();
+  const { isTabletOrMobile } = useIsSmallScreen();
 
   return (
     <FooterContainer>
       <FooterContentContainer mobile={isTabletOrMobile}>
         <div>
-          Covid Stats
+          nameless
           <FooterSeparator>|</FooterSeparator>
           Created by <i>Zack 2020</i>
         </div>
-        <MobileOnly>
+        <SmallScreenOnly>
           <br />
-        </MobileOnly>
+        </SmallScreenOnly>
         <div>
           <a href="https://github.com/Altzack">
             <FaGithub size="25px" style={{ marginRight: 15 }} />

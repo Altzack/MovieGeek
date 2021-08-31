@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Drawer, Button } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
-import { DesktopOnly, MobileOnly } from './responsiveComponents';
+import { BigScreenOnly, SmallScreenOnly } from './responsiveComponents';
 import 'antd/dist/antd.css';
 import '../../App.css';
 
@@ -80,23 +80,23 @@ export default function Header() {
 
   return (
     <AppHeaderContainer>
-      <DesktopOnly>
+      <BigScreenOnly>
         <HeaderContentContainer>
           <HeaderSection style={{ justifyContent: 'flex-start' }}>
             <Link style={{ textDecoration: 'none', color: '#000' }} to="/">
-              <StyledHeader></StyledHeader>
+              <StyledHeader />
             </Link>
-            <FooterSeparator></FooterSeparator>
+            <FooterSeparator />
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
             <LogoLink to="/">
               <StyledTitle>title</StyledTitle>
             </LogoLink>
           </HeaderSection>
-          <HeaderSection style={{ justifyContent: 'flex-end' }}></HeaderSection>
+          <HeaderSection style={{ justifyContent: 'flex-end' }} />
         </HeaderContentContainer>
-      </DesktopOnly>
-      <MobileOnly>
+      </BigScreenOnly>
+      <SmallScreenOnly>
         <HeaderContentContainer>
           <HeaderSection style={{ justifyContent: 'flex-start' }}>
             <Button
@@ -142,7 +142,7 @@ export default function Header() {
             <h3>Blah</h3>
           </Link>
         </Drawer>
-      </MobileOnly>
+      </SmallScreenOnly>
     </AppHeaderContainer>
   );
 }

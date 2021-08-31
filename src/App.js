@@ -1,6 +1,6 @@
 import './App.css';
 import styled from 'styled-components/macro';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,10 +10,10 @@ import {
 import { QueryParamProvider } from 'use-query-params';
 import { message } from 'antd';
 import FourOhFour from './containers/common/FourOhFour';
-import { useResponsive } from './containers/common/responsiveComponents';
+import { useIsSmallScreen } from './containers/common/responsiveComponents';
 import Footer from './containers/common/Footer';
 import Header from './containers/common/Header';
-import AppContext from './AppContext';
+import { AppContext } from './AppContext';
 import LandingPage from './containers/LandingPage/LandingPage';
 import config from './config';
 
@@ -34,7 +34,7 @@ const ContentContainer = styled.div`
 `;
 
 const AppWrapper = withRouter(({ children }) => {
-  const { isTabletOrMobile } = useResponsive();
+  const { isTabletOrMobile } = useIsSmallScreen();
   return (
     <AppContainer isMobile={isTabletOrMobile}>
       <Header />
@@ -44,36 +44,28 @@ const AppWrapper = withRouter(({ children }) => {
   );
 });
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    const contextValues = {};
-
-    return (
-      <AppContext.Provider value={contextValues}>
-        <>
-          <Router>
-            <QueryParamProvider ReactRouterRoute={Route}>
-              <AppWrapper>
-                <Switch>
-                  <Route exact path="/">
-                    <LandingPage />
-                  </Route>
-                  <Route>
-                    <FourOhFour />
-                  </Route>
-                </Switch>
-              </AppWrapper>
-            </QueryParamProvider>
-          </Router>
-        </>
-      </AppContext.Provider>
-    );
-  }
-}
+const App = () => {
+  const [contextData, setContextData] = useState();
+  return (
+    <AppContext.Provider value={contextData}>
+      <>
+        <Router>
+          <QueryParamProvider ReactRouterRoute={Route}>
+            <AppWrapper>
+              <Switch>
+                <Route exact path="/">
+                  <LandingPage />
+                </Route>
+                <Route>
+                  <FourOhFour />
+                </Route>
+              </Switch>
+            </AppWrapper>
+          </QueryParamProvider>
+        </Router>
+      </>
+    </AppContext.Provider>
+  );
+};
 
 export default App;
