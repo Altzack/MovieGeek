@@ -1,4 +1,6 @@
-export default {
-  API_KEY: '9f9823d729f240218f2932a000ee755a',
-  API_ENDPOINT: 'https://api.covidactnow.org/v2',
+const config = {
+  API_KEY: process.env.REACT_APP_API_KEY,
+  API_ENDPOINT: process.env.REACT_APP_API_ENDPOINT,
 };
+
+export default config;

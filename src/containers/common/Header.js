@@ -57,6 +57,7 @@ const StyledTitle = styled.h1`
   color: #fff;
   margin-bottom: 0;
   letter-spacing: 3px;
+  font-size: 15px;
   font-family: Rubik;
 `;
 
@@ -90,7 +91,7 @@ export default function Header() {
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
             <LogoLink to="/">
-              <StyledTitle>title</StyledTitle>
+              <StyledTitle>Happy News</StyledTitle>
             </LogoLink>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'flex-end' }} />
@@ -113,11 +114,11 @@ export default function Header() {
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
             <LogoLink to="/">
-              <StyledTitle>Untitled</StyledTitle>
+              <StyledTitle>happy News</StyledTitle>
             </LogoLink>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'flex-end' }}>
-            hi
+            :)
           </HeaderSection>
         </HeaderContentContainer>
         <Drawer
