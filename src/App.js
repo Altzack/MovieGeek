@@ -1,6 +1,6 @@
 import './App.css';
 import styled from 'styled-components/macro';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,14 +8,12 @@ import {
   withRouter,
 } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
-import { message } from 'antd';
 import FourOhFour from './containers/common/FourOhFour';
 import { useIsSmallScreen } from './containers/common/responsiveComponents';
 import Footer from './containers/common/Footer';
 import Header from './containers/common/Header';
 import { AppContext } from './AppContext';
 import LandingPage from './containers/LandingPage/LandingPage';
-import config from './config';
 
 const AppContainer = styled.div`
   display: flex;
@@ -45,9 +43,8 @@ const AppWrapper = withRouter(({ children }) => {
 });
 
 const App = () => {
-  const [contextData, setContextData] = useState();
   return (
-    <AppContext.Provider value={contextData}>
+    <AppContext.Provider>
       <>
         <Router>
           <QueryParamProvider ReactRouterRoute={Route}>

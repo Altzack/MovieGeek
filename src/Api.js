@@ -1,7 +1,5 @@
 // api.js
 
-import config from './config';
-
 export const fetchNews = async () => {
   const url =
     'https://newsapi.org/v2/top-headlines?country=us&apiKey=cd2adef1b9e94817b83d445afcfed6e0&pageSize=100';
