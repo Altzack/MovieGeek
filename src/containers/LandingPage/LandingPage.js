@@ -1,127 +1,117 @@
-// LandingPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import Sentiment from 'sentiment';
-import { Button } from 'antd';
-import { fetchNews } from '../../Api';
 
-const NewsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 0 auto;
-  max-width: 1200px;
-`;
-
-const NewsItem = styled.div`
-  background-color: #282c34;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  margin: 20px;
+const Container = styled.div`
   padding: 20px;
-  width: 300px;
+  background-color: #1b1d1e;
+  color: #e8e6e3;
+  min-height: 100vh;
 `;
 
-const NewsImage = styled.img`
-  border-radius: 5px;
-  height: auto;
-  max-width: 100%;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px;
+`;
+
+const Card = styled.div`
+  background-color: #2c2f30;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 10px;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const Poster = styled.img`
+  width: 100%;
+  height: 300px;
   object-fit: cover;
 `;
 
-const NewsTitle = styled.h2`
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+const Details = styled.div`
+  margin-top: 10px;
 `;
 
-const NewsDescription = styled.p`
-  font-size: 0.9rem;
+const Title = styled.h3`
+  font-size: 16px;
+  color: #ffffff;
+  margin: 0;
 `;
 
-const NewsAuthor = styled.p`
-  font-weight: bold;
-  margin-top: 1rem;
+const Overview = styled.p`
+  font-size: 14px;
+  color: #aaaaaa;
+  margin: 10px 0;
 `;
 
-const NewsSource = styled.p`
-  font-size: 0.8rem;
-  margin-top: 1rem;
+const ReleaseDate = styled.p`
+  font-size: 12px;
+  color: #666;
+  margin: 0;
 `;
 
-const LandingPage = () => {
-  const [newsData, setNewsData] = useState([]);
-  const [isPositive, setIsPositive] = useState(true);
+const ToggleButton = styled.button`
+  background-color: #e50914;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchNews();
-      if (data) {
-        setNewsData(data.articles);
-      }
-    };
+  &:hover {
+    background-color: #b00710;
+  }
+`;
 
-    fetchData();
-  }, []);
+const StyledHeader = styled.h1`
+  color: #fff;
+`;
 
-  const removeHTMLTags = (text) => {
-    return text.replace(/<[^>]*>/g, '');
+const LandingPage = ({ items, title, type }) => {
+  const [expandedItem, setExpandedItem] = useState(null);
+
+  const toggleDescription = (itemId) => {
+    setExpandedItem(expandedItem === itemId ? null : itemId);
   };
 
-  const filterPositiveNews = (articles) => {
-    const sentiment = new Sentiment();
-    return articles.filter((article) => {
-      const titleScore = sentiment.analyze(article.title).score;
-      const descriptionScore = sentiment.analyze(article.description).score;
-      const totalScore = titleScore + descriptionScore;
-
-      return totalScore > 0;
-    });
-  };
-
-  const filterNegativeNews = (articles) => {
-    const sentiment = new Sentiment();
-    return articles.filter((article) => {
-      const titleScore = sentiment.analyze(article.title).score;
-      const descriptionScore = sentiment.analyze(article.description).score;
-      const totalScore = titleScore + descriptionScore;
-
-      return totalScore < 0;
-    });
-  };
-
-  const handleButtonClick = () => {
-    setIsPositive(!isPositive);
-  };
-  const filteredNewsData = isPositive
-    ? filterNegativeNews(newsData)
-    : filterPositiveNews(newsData);
-
-  // Render the fetched news data here
   return (
-    <>
-      <div>
-        <Button onClick={handleButtonClick}>
-          {isPositive ? 'Switch to Positive News' : 'Switch to Negative News'}
-        </Button>
-      </div>
-      <NewsContainer>
-        {filteredNewsData.map((newsItem) => (
-          <NewsItem key={newsItem.url}>
-            {newsItem.urlToImage && (
-              <NewsImage src={newsItem.urlToImage} alt={newsItem.title} />
-            )}
-            <NewsTitle>{newsItem.title}</NewsTitle>
-            <NewsDescription>
-              {removeHTMLTags(newsItem.description)}
-            </NewsDescription>
-            <NewsAuthor>{newsItem.author}</NewsAuthor>
-            <NewsSource>
-              Source: <a href={newsItem.url}>{newsItem.source.name}</a>
-            </NewsSource>
-          </NewsItem>
+    <Container>
+      <StyledHeader>{title}</StyledHeader>
+      <Grid>
+        {items.map((item) => (
+          <Card key={item.id}>
+            <Poster
+              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+              alt={item.title || item.name}
+            />
+            <Details>
+              <Title>{item.title || item.name}</Title>
+              <ReleaseDate>
+                {type === 'movie'
+                  ? `Release Date: ${item.release_date}`
+                  : `First Air Date: ${item.first_air_date}`}
+              </ReleaseDate>
+              <Overview>
+                {expandedItem === item.id
+                  ? item.overview
+                  : `${item.overview.slice(0, 100)}...`}
+              </Overview>
+              <ToggleButton onClick={() => toggleDescription(item.id)}>
+                {expandedItem === item.id ? 'Show Less' : 'Show More'}
+              </ToggleButton>
+            </Details>
+          </Card>
         ))}
-      </NewsContainer>
-    </>
+      </Grid>
+    </Container>
   );
 };
 

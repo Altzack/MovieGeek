@@ -1,11 +1,13 @@
 import styled from 'styled-components/macro';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Drawer, Button } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { Link, useHistory } from 'react-router-dom';
+import { Drawer, Button, Input } from 'antd';
+import { MenuOutlined, SearchOutlined } from '@ant-design/icons';
 import { BigScreenOnly, SmallScreenOnly } from './responsiveComponents';
 import 'antd/dist/antd.css';
 import '../../App.css';
+
+const { Search } = Input;
 
 const AppHeaderContainer = styled.div`
   padding: 8px 12px;
@@ -16,7 +18,6 @@ const AppHeaderContainer = styled.div`
   width: 100vw;
   font-family: Rubik;
   z-index: 99;
-  /*background-color: #ff294a;*/
   color: #fff;
   background-color: rgb(27, 29, 30);
 `;
@@ -45,19 +46,11 @@ const HeaderContentContainer = styled.div`
   height: 44px;
 `;
 
-const StyledHeader = styled.h3`
-  color: #fff;
-  margin-bottom: 0;
-  :hover {
-    color: #1890ff;
-  }
-`;
-
 const StyledTitle = styled.h1`
   color: #fff;
   margin-bottom: 0;
   letter-spacing: 3px;
-  font-size: 15px;
+  font-size: 22px;
   font-family: Rubik;
 `;
 
@@ -68,8 +61,20 @@ const LogoLink = styled(Link)`
   font-size: 15px;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #fff;
+  margin: 0 10px;
+  font-size: 14px;
+  &:hover {
+    color: #1890ff;
+  }
+`;
+
 export default function Header() {
   const [visible, setVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const history = useHistory();
 
   const showDrawer = () => {
     setVisible(true);
@@ -79,22 +84,38 @@ export default function Header() {
     setVisible(false);
   };
 
+  const handleSearch = (value) => {
+    if (value.trim()) {
+      history.push(`/search?query=${value}`);
+    }
+  };
+
   return (
     <AppHeaderContainer>
       <BigScreenOnly>
         <HeaderContentContainer>
           <HeaderSection style={{ justifyContent: 'flex-start' }}>
-            <Link style={{ textDecoration: 'none', color: '#000' }} to="/">
-              <StyledHeader />
-            </Link>
+            <StyledLink to="/movies">Movies</StyledLink>
             <FooterSeparator />
+            <StyledLink to="/tv">TV</StyledLink>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
-            <LogoLink to="/">
-              <StyledTitle>Happy News</StyledTitle>
+            <LogoLink to="/movies">
+              <StyledTitle>TrustFam</StyledTitle>
             </LogoLink>
           </HeaderSection>
-          <HeaderSection style={{ justifyContent: 'flex-end' }} />
+          <HeaderSection style={{ justifyContent: 'flex-end' }}>
+            <Search
+              placeholder="Search for movies or TV shows"
+              allowClear
+              enterButton={<SearchOutlined />}
+              size="middle"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onSearch={handleSearch}
+              style={{ width: '80%' }}
+            />
+          </HeaderSection>
         </HeaderContentContainer>
       </BigScreenOnly>
       <SmallScreenOnly>
@@ -106,24 +127,32 @@ export default function Header() {
                 backgroundColor: 'transparent',
                 color: '#364966',
               }}
-              ype="text"
+              type="text"
               onClick={showDrawer}
             >
               <MenuOutlined />
             </Button>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
-            <LogoLink to="/">
-              <StyledTitle>happy News</StyledTitle>
+            <LogoLink to="/movies">
+              <StyledTitle>TrustFam</StyledTitle>
             </LogoLink>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'flex-end' }}>
-            :)
+            <Button
+              icon={<SearchOutlined />}
+              style={{
+                color: '#fff',
+                background: 'transparent',
+                border: 'none',
+              }}
+              onClick={() => history.push('/search')}
+            />
           </HeaderSection>
         </HeaderContentContainer>
         <Drawer
           placement="left"
-          closable="true"
+          closable
           onClose={onClose}
           visible={visible}
           key="AppHeader-left-drawer"
@@ -131,16 +160,16 @@ export default function Header() {
           <Link
             onClick={onClose}
             style={{ textDecoration: 'none', color: '#000' }}
-            to="/"
+            to="/movies"
           >
-            <h3>About</h3>
+            <h3>Movies</h3>
           </Link>
           <Link
             onClick={onClose}
             style={{ textDecoration: 'none', color: '#000' }}
-            to="/"
+            to="/tv"
           >
-            <h3>Blah</h3>
+            <h3>TV</h3>
           </Link>
         </Drawer>
       </SmallScreenOnly>

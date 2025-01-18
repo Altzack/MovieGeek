@@ -1,6 +1,6 @@
 import './App.css';
 import styled from 'styled-components/macro';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,6 +14,7 @@ import Footer from './containers/common/Footer';
 import Header from './containers/common/Header';
 import { AppContext } from './AppContext';
 import LandingPage from './containers/LandingPage/LandingPage';
+import { fetchPopularMovies, fetchPopularTv } from './Api';
 
 const AppContainer = styled.div`
   display: flex;
@@ -43,6 +44,32 @@ const AppWrapper = withRouter(({ children }) => {
 });
 
 const App = () => {
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [popularTvShows, setPopularTvShows] = useState([]);
+
+  useEffect(() => {
+    const getMovies = async () => {
+      try {
+        const movies = await fetchPopularMovies();
+        setPopularMovies(movies?.results || []);
+      } catch (error) {
+        console.error('Error fetching popular movies:', error);
+      }
+    };
+
+    const getTvShows = async () => {
+      try {
+        const tvShows = await fetchPopularTv();
+        setPopularTvShows(tvShows?.results || []);
+      } catch (error) {
+        console.error('Error fetching popular TV shows:', error);
+      }
+    };
+
+    getMovies();
+    getTvShows();
+  }, []);
+
   return (
     <AppContext.Provider>
       <>
@@ -50,8 +77,19 @@ const App = () => {
           <QueryParamProvider ReactRouterRoute={Route}>
             <AppWrapper>
               <Switch>
-                <Route exact path="/">
-                  <LandingPage />
+                <Route exact path="/movies">
+                  <LandingPage
+                    items={popularMovies}
+                    title="Popular Movies"
+                    type="movie"
+                  />
+                </Route>
+                <Route exact path="/tv">
+                  <LandingPage
+                    items={popularTvShows}
+                    title="Popular TV Shows"
+                    type="tv"
+                  />
                 </Route>
                 <Route>
                   <FourOhFour />

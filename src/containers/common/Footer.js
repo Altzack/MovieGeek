@@ -32,9 +32,9 @@ export default function Footer() {
     <FooterContainer>
       <FooterContentContainer mobile={isTabletOrMobile}>
         <div>
-          nameless
+          TrustFam © 2025
           <FooterSeparator>|</FooterSeparator>
-          Created by <i>Zack 2020</i>
+          Created by <i>Zack 2025</i>
         </div>
         <SmallScreenOnly>
           <br />
