@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -8,23 +9,25 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
+const Header = styled.h1`
+  color: #fff;
+  margin-bottom: 20px;
+`;
+
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 40px;
+  gap: 20px;
 `;
 
 const Card = styled.div`
   background-color: #2c2f30;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  padding: 10px;
-
+  text-align: center;
+  transition: transform 0.3s;
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -34,83 +37,106 @@ const Poster = styled.img`
   object-fit: cover;
 `;
 
-const Details = styled.div`
-  margin-top: 10px;
-`;
-
 const Title = styled.h3`
   font-size: 16px;
-  color: #ffffff;
-  margin: 0;
-`;
-
-const Overview = styled.p`
-  font-size: 14px;
-  color: #aaaaaa;
+  color: #fff;
   margin: 10px 0;
 `;
 
-const ReleaseDate = styled.p`
-  font-size: 12px;
-  color: #666;
-  margin: 0;
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 `;
 
-const ToggleButton = styled.button`
+const Button = styled.button`
   background-color: #e50914;
-  color: #ffffff;
+  color: #fff;
   border: none;
-  padding: 5px 10px;
-  margin-top: 5px;
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-
-  &:hover {
-    background-color: #b00710;
+  &:disabled {
+    background-color: #555;
+    cursor: not-allowed;
   }
 `;
 
-const StyledHeader = styled.h1`
-  color: #fff;
-`;
+const LandingPage = ({ fetchFunction, title, type }) => {
+  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
 
-const LandingPage = ({ items, title, type }) => {
-  const [expandedItem, setExpandedItem] = useState(null);
+  useEffect(() => {
+    // Reset page when `fetchFunction` or `type` changes
+    setPage(1);
+  }, [fetchFunction, type]);
 
-  const toggleDescription = (itemId) => {
-    setExpandedItem(expandedItem === itemId ? null : itemId);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchFunction(page);
+        setItems(data.results || []);
+        setTotalPages(data.total_pages || 1);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [fetchFunction, page]);
+
+  const handlePrevious = () => {
+    if (page > 1) setPage((prevPage) => prevPage - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage((prevPage) => prevPage + 1);
   };
 
   return (
     <Container>
-      <StyledHeader>{title}</StyledHeader>
-      <Grid>
-        {items.map((item) => (
-          <Card key={item.id}>
-            <Poster
-              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-              alt={item.title || item.name}
-            />
-            <Details>
-              <Title>{item.title || item.name}</Title>
-              <ReleaseDate>
-                {type === 'movie'
-                  ? `Release Date: ${item.release_date}`
-                  : `First Air Date: ${item.first_air_date}`}
-              </ReleaseDate>
-              <Overview>
-                {expandedItem === item.id
-                  ? item.overview
-                  : `${item.overview.slice(0, 100)}...`}
-              </Overview>
-              <ToggleButton onClick={() => toggleDescription(item.id)}>
-                {expandedItem === item.id ? 'Show Less' : 'Show More'}
-              </ToggleButton>
-            </Details>
-          </Card>
-        ))}
-      </Grid>
+      <Header>{title}</Header>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <Grid>
+            {items.map((item) => (
+              <Link
+                key={item.id}
+                to={`/details/${type}/${item.id}`} // Link to details page
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <Card>
+                  <Poster
+                    src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                    alt={item.title || item.name}
+                  />
+                  <Title>{item.title || item.name}</Title>
+                </Card>
+              </Link>
+            ))}
+          </Grid>
+          <Pagination>
+            <Button onClick={handlePrevious} disabled={page === 1}>
+              Previous
+            </Button>
+            <span>
+              Page {page} of {totalPages}
+            </span>
+            <Button onClick={handleNext} disabled={page === totalPages}>
+              Next
+            </Button>
+          </Pagination>
+        </>
+      )}
     </Container>
   );
 };

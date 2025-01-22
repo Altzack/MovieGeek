@@ -86,7 +86,7 @@ export default function Header() {
 
   const handleSearch = (value) => {
     if (value.trim()) {
-      history.push(`/search?query=${value}`);
+      history.push(`/search?query=${value.trim()}`);
     }
   };
 
@@ -100,7 +100,7 @@ export default function Header() {
             <StyledLink to="/tv">TV</StyledLink>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
-            <LogoLink to="/movies">
+            <LogoLink to="/">
               <StyledTitle>TrustFam</StyledTitle>
             </LogoLink>
           </HeaderSection>
@@ -134,7 +134,7 @@ export default function Header() {
             </Button>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'center' }}>
-            <LogoLink to="/movies">
+            <LogoLink to="/">
               <StyledTitle>TrustFam</StyledTitle>
             </LogoLink>
           </HeaderSection>

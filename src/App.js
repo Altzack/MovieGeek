@@ -15,6 +15,9 @@ import Header from './containers/common/Header';
 import { AppContext } from './AppContext';
 import LandingPage from './containers/LandingPage/LandingPage';
 import { fetchPopularMovies, fetchPopularTv } from './Api';
+import DetailsPage from './components/DetailsPage/DetailsPage';
+import SearchResults from './components/Search/SearchResults';
+import HomePage from './components/HomePage/HomePage';
 
 const AppContainer = styled.div`
   display: flex;
@@ -79,17 +82,24 @@ const App = () => {
               <Switch>
                 <Route exact path="/movies">
                   <LandingPage
-                    items={popularMovies}
+                    fetchFunction={fetchPopularMovies}
                     title="Popular Movies"
                     type="movie"
                   />
                 </Route>
                 <Route exact path="/tv">
                   <LandingPage
-                    items={popularTvShows}
+                    fetchFunction={fetchPopularTv}
                     title="Popular TV Shows"
                     type="tv"
                   />
+                </Route>
+                <Route exact path="/" component={HomePage} />
+                <Route exact path="/details/:type/:id">
+                  <DetailsPage />
+                </Route>
+                <Route exact path="/search">
+                  <SearchResults />
                 </Route>
                 <Route>
                   <FourOhFour />

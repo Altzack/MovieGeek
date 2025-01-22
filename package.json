@@ -24,7 +24,9 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-slick": "^0.30.3",
     "sentiment": "^5.0.2",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.0",
     "use-query-params": "^1.1.8"
   },
