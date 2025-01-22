@@ -62,7 +62,14 @@ const SearchResults = () => {
       try {
         setLoading(true);
         const data = await searchMulti(query);
-        setResults(data.results || []);
+        // Filter out "people" and results with null `poster_path` or `title`
+        const filteredResults = (data.results || []).filter(
+          (item) =>
+            item.media_type !== 'person' &&
+            (item.poster_path || item.profile_path) &&
+            (item.title || item.name)
+        );
+        setResults(filteredResults);
       } catch (error) {
         console.error('Error fetching search results:', error);
       } finally {

@@ -18,6 +18,7 @@ import { fetchPopularMovies, fetchPopularTv } from './Api';
 import DetailsPage from './components/DetailsPage/DetailsPage';
 import SearchResults from './components/Search/SearchResults';
 import HomePage from './components/HomePage/HomePage';
+import ScrollToTop from './ScrollToTop';
 
 const AppContainer = styled.div`
   display: flex;
@@ -77,6 +78,7 @@ const App = () => {
     <AppContext.Provider>
       <>
         <Router>
+          <ScrollToTop />
           <QueryParamProvider ReactRouterRoute={Route}>
             <AppWrapper>
               <Switch>
