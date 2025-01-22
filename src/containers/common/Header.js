@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Drawer, Button, Input } from 'antd';
-import { MenuOutlined, SearchOutlined } from '@ant-design/icons';
+import { MenuOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import { BigScreenOnly, SmallScreenOnly } from './responsiveComponents';
 import 'antd/dist/antd.css';
 import '../../App.css';
@@ -73,6 +73,7 @@ const StyledLink = styled(Link)`
 
 export default function Header() {
   const [visible, setVisible] = useState(false);
+  const [mobileSearchVisible, setMobileSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const history = useHistory();
 
@@ -87,11 +88,13 @@ export default function Header() {
   const handleSearch = (value) => {
     if (value.trim()) {
       history.push(`/search?query=${value.trim()}`);
+      setMobileSearchVisible(false); // Close the mobile search bar after searching
     }
   };
 
   return (
     <AppHeaderContainer>
+      {/* Desktop Header */}
       <BigScreenOnly>
         <HeaderContentContainer>
           <HeaderSection style={{ justifyContent: 'flex-start' }}>
@@ -118,6 +121,8 @@ export default function Header() {
           </HeaderSection>
         </HeaderContentContainer>
       </BigScreenOnly>
+
+      {/* Mobile Header */}
       <SmallScreenOnly>
         <HeaderContentContainer>
           <HeaderSection style={{ justifyContent: 'flex-start' }}>
@@ -139,15 +144,28 @@ export default function Header() {
             </LogoLink>
           </HeaderSection>
           <HeaderSection style={{ justifyContent: 'flex-end' }}>
-            <Button
-              icon={<SearchOutlined />}
-              style={{
-                color: '#fff',
-                background: 'transparent',
-                border: 'none',
-              }}
-              onClick={() => history.push('/search')}
-            />
+            {mobileSearchVisible ? (
+              <Search
+                placeholder="Search"
+                allowClear
+                enterButton={<SearchOutlined />}
+                size="small"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onSearch={handleSearch}
+                style={{ width: '100%' }}
+              />
+            ) : (
+              <Button
+                icon={<SearchOutlined />}
+                style={{
+                  color: '#fff',
+                  background: 'transparent',
+                  border: 'none',
+                }}
+                onClick={() => setMobileSearchVisible(true)}
+              />
+            )}
           </HeaderSection>
         </HeaderContentContainer>
         <Drawer
