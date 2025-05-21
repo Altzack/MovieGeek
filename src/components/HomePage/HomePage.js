@@ -171,7 +171,7 @@ const HomePage = () => {
     <Container>
       {/* Hero Section */}
       <HeroSection>
-        <HeroTitle>Welcome to TrustFam</HeroTitle>
+        <HeroTitle>Welcome to MovieGeek</HeroTitle>
         <HeroTagline>Discover the latest Movies and TV Shows</HeroTagline>
         <CTAButton to="/movies">Explore Now</CTAButton>
       </HeroSection>

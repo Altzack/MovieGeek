@@ -145,7 +145,7 @@ export default function Header() {
     <AppHeaderContainer>
       <HeaderContentContainer>
         {/* Logo */}
-        <LogoLink to="/">TrustFam</LogoLink>
+        <LogoLink to="/">MovieGeek</LogoLink>
 
         {/* Desktop Nav Links */}
         <NavLinks>

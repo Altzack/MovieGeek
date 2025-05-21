@@ -32,7 +32,7 @@ export default function Footer() {
     <FooterContainer>
       <FooterContentContainer mobile={isTabletOrMobile}>
         <div>
-          TrustFam © 2025
+          MovieGeek © 2025
           <FooterSeparator>|</FooterSeparator>
           Created by <i>Zack 2025</i>
         </div>
