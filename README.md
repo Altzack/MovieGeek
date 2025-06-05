@@ -1,3 +1,5 @@
-A small boilerplate built with React to kickstart React web apps. Mainly to help me save time.
+A movie and tv explorer
+
+https://trustfam.netlify.app/
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
